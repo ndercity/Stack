@@ -1,21 +1,33 @@
 #include <iostream>
-#include <vector>
+#include <string>
 #include <sstream>
 
 using namespace std;
 
+struct Node {
+    int data;
+    Node* next;
+};
+
 class Stack {
 private:
-    vector<int> elements;
+    Node* top;
 
 public:
+    Stack() : top(nullptr) {}
+
     void push(int element) {
-        elements.push_back(element);
+        Node* newNode = new Node;
+        newNode->data = element;
+        newNode->next = top;
+        top = newNode;
     }
 
     void pop() {
         if (!isEmpty()) {
-            elements.pop_back();
+            Node* temp = top;
+            top = top->next;
+            delete temp;
         }
         else {
             cout << "Stack is empty. Cannot pop element." << endl;
@@ -24,7 +36,7 @@ public:
 
     int peek() {
         if (!isEmpty()) {
-            return elements.back();
+            return top->data;
         }
         else {
             cout << "Stack is empty." << endl;
@@ -33,19 +45,27 @@ public:
     }
 
     bool isEmpty() {
-        return elements.empty();
+        return top == nullptr;
     }
 
     void display() {
         if (!isEmpty()) {
             cout << "Stack elements: ";
-            for (int i : elements) {
-                cout << i << " ";
+            Node* temp = top;
+            while (temp != nullptr) {
+                cout << temp->data << " ";
+                temp = temp->next;
             }
             cout << endl;
         }
         else {
             cout << "Stack is empty." << endl;
+        }
+    }
+
+    ~Stack() {
+        while (!isEmpty()) {
+            pop();
         }
     }
 };
